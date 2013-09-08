@@ -18,6 +18,7 @@ type Queue struct {
 	size int
 }
 
+//Creates a new queue
 func NewQueue() *Queue {
 	return &Queue{}
 }
