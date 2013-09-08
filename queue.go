@@ -1,7 +1,6 @@
-//This queue is FIFO based.
+//Package queue provides a FIFO queue with mutex lock for safe read and write
 //
-//It's linked list based with mutex lock for
-//safe read and write for multi-threaded programs.
+//Queue uses linked list internal structure
 package queue
 
 import (
