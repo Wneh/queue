@@ -1,21 +1,27 @@
+//This queue is FIFO based.
+//
+//It's linked list based with mutex lock for
+//safe read and write for multi-threaded programs.
 package queue
 
 import (
 	"errors"
+	"sync"
 )
 
 //Internal node for holding the value
 //and the pointer to the next node
 type node struct {
-	Value    interface{}
-	NextNode *node
+	Value    interface{} //The data
+	NextNode *node       //Next node
 }
 
 //Queue is FIFO based queue with linked-list structure
 type Queue struct {
-	head *node
-	tail *node
-	size int
+	head *node        //Pointer to the first node
+	tail *node        //Pointer to the last node
+	size int          //Number of nodes in the queue
+	mu   sync.RWMutex //Mutex lock for atomic operations
 }
 
 //Creates a new queue
@@ -26,11 +32,14 @@ func NewQueue() *Queue {
 //Push add to the end of the queue
 func (q *Queue) Push(i interface{}) {
 
+	//Lock it
+	q.mu.Lock()
+
 	//Create a new node a contaier for the value
 	newNode := node{i, nil}
 
 	//Check if the queue is empty or not
-	if q.IsEmpty() {
+	if q.head == nil {
 		//Empty so set the head pointer to the new node
 		q.head = &newNode
 	} else {
@@ -44,16 +53,23 @@ func (q *Queue) Push(i interface{}) {
 	//Increase the size before return
 	q.size++
 
+	//Unlock it
+	q.mu.Unlock()
+
 	return
 }
 
-//Pop remove and return the oldest node in the queue 
+//Pop remove and return the oldest node in the queue. 
+//If the queue is empty error will contain "Queue is empty"
 func (q *Queue) Pop() (i interface{}, err error) {
 
 	//Check if the queue is empty
 	if q.IsEmpty() {
-		return nil, errors.New("Queue is empty")	
+		return nil, errors.New("Queue is empty")
 	}
+
+	//Lock it
+	q.mu.Lock()
 
 	//Take out the headNode
 	var headNode = *q.head
@@ -70,15 +86,31 @@ func (q *Queue) Pop() (i interface{}, err error) {
 	//Reduce the size before return
 	q.size--
 
-	return headNode.Value,nil
+	//Unlock it
+	q.mu.Unlock()
+
+	return headNode.Value, nil
 }
 
 // The number of elements in the queue
 func (q *Queue) Size() int {
-	return q.size
+	//Lock it
+	q.mu.RLock()
+	//Get the data
+	size := q.size
+	//Unlock it
+	q.mu.RUnlock()
+
+	return size
 }
 
 // Returns true if there is elements in the queue, otherwise false
 func (q *Queue) IsEmpty() bool {
-	return q.head == nil
+	//Lock it
+	q.mu.RLock()
+	//Get the data
+	empty := q.head == nil
+	//Unlock it
+	q.mu.RUnlock()
+	return empty
 }

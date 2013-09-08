@@ -18,7 +18,7 @@ func Test_Queue_NewEmpty(t *testing.T) {
 	if q.IsEmpty() {
 		t.Log("NewEmpty: test passed")
 	} else {
-		t.Error("The queue was not empty")		
+		t.Error("The queue was not empty")
 	}
 }
 
@@ -38,7 +38,7 @@ func Test_Queue_One(t *testing.T) {
 	pop, err := q.Pop()
 
 	if err != nil {
-	 	t.Error(err)
+		t.Error(err)
 	}
 
 	//We should now get Foo back when we Pop
@@ -72,7 +72,7 @@ func Test_Queue_Two(t *testing.T) {
 
 	pop, err := q.Pop()
 	if err != nil {
-	 	t.Error(err)
+		t.Error(err)
 	}
 
 	//We should now get Foo back when we Pop
@@ -92,7 +92,7 @@ func Test_Queue_Two(t *testing.T) {
 	//Pop another from the queue
 	pop, err = q.Pop()
 	if err != nil {
-	 	t.Error(err)
+		t.Error(err)
 	}
 
 	//We should now get bar back when we Pop
@@ -125,11 +125,11 @@ func Test_Queue_NewEmptyError(t *testing.T) {
 	if q.IsEmpty() {
 		t.Log("NewEmptyError: test passed")
 	} else {
-		t.Error("NewEmptyError: The queue was not empty")		
+		t.Error("NewEmptyError: The queue was not empty")
 	}
 
 	//Do a Pop on a empty queueu
-	pop,err := q.Pop()
+	pop, err := q.Pop()
 
 	//Pop should be nil
 	if pop != nil {
@@ -140,7 +140,7 @@ func Test_Queue_NewEmptyError(t *testing.T) {
 
 	//And we should have an error instead
 	if err.Error() != "Queue is empty" {
-		t.Error("NewEmptyError: Pop() did not pass - err did not contain Queue is empty")	
+		t.Error("NewEmptyError: Pop() did not pass - err did not contain Queue is empty")
 		t.Log("NewEmptyError: Bar Passed")
 	}
 }
@@ -153,14 +153,14 @@ func Test_Queue_Counting(t *testing.T) {
 	//Push 1,2,3,4,5,6,7,8,9,10 to the queue
 	for i := 1; i <= 10; i++ {
 		q.Push(i)
-	} 
+	}
 
 	result := 0
 
 	//Pop and sum them up
 	for !q.IsEmpty() {
-		tempValue,_ := q.Pop()
-		value,_ := tempValue.(int)
+		tempValue, _ := q.Pop()
+		value, _ := tempValue.(int)
 		result += value
 	}
 
